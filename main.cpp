@@ -1,3 +1,9 @@
+/*
+    game hangman sederhana v1.0
+    dibuat oleh: M NAUFAL ADRIAN PRATAMA PUTRA
+    uploaded on: 12/06/2021
+
+*/
 #include <iostream>
 #include <string> 
 #include <cstdlib>
