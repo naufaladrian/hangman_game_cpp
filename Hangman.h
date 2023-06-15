@@ -1,35 +1,64 @@
 /*
     class game hangman sederhana v2
     dibuat oleh: M NAUFAL ADRIAN PRATAMA PUTRA
-    uploaded on: 12/06/2021
-
+    uploaded on: 12/06/2023
+    perubahan terakhir : 15/06/2023
 */
-#include <iostream>
-#include <string> 
-#include <cstdlib>
-#include <time.h>
+
+//LIBRARY YANG DIGUNAKAN
+#include <iostream> //cout dan cin
+#include <string> //menggunakan string
+#include <cstdlib> //menggunakan rand() dan srand()
+#include <time.h> //menggunakan time()
+#include <vector> // menggunakan vector
+#include "readFile.h" //header berisi fungsi untuk membaca file
+
 using namespace std;
 
 class Hangman
 {
     public:
-        string wordList[10]={"selection","bubble","insertion","merge","quick","heap","radix","counting","bucket","shell"}; 
-        string word;
-        string hiddenWord;
-        int wordSize;
-        int tries;
-        bool isGameOver;
+        string wordList[10]; //list kata yang akan ditebak
+        string word; //kata yang diambil dari list
+        string theme; //tema tebak2kan
+        string hiddenWord; //kata yang sudah disembunyikan
+        int wordSize; //panjang karakter variable word
+        int tries; //kesempatan mencoba dari 6 - 0
+        bool isGameOver; //status apakah game sudah berakhir
         
         //default constructor
         Hangman()
         {
+            saveQuestionToArray();
             this->word = randomWord(this->wordList, 10);
             this->hiddenWord = fhiddenWord(this->word);
             this->wordSize = (this->word).length();
             this->isGameOver = false;
             this->tries = 6;
         }
-        
+
+
+
+        //fungsi untuk menyimpan kata-kata dari file eksternal ke dalam array
+        void saveQuestionToArray()
+        {
+            //KAMUS
+            int i;
+            vector<string> readLines = readTextFile("question.txt"); 
+
+            //ALGORITMA
+             // Memasukkan elemen vektor ke dalam array wordlist
+            i=0;
+            while (i < 10) 
+            {
+                this->wordList[i] = readLines[i];
+                i++;
+            }
+            this->theme = readLines[i]; //baris ke 11 pada file dimasukkan ke theme
+        }
+
+
+
         //fungsi untuk memilih kata secara random
         string randomWord(string words[], int size)
         {
@@ -38,11 +67,14 @@ class Hangman
 
             //ALGORITMA
             srand(time(NULL));//menggunakan waktu saat ini sebagai seed untuk generator angka acak
+            //https://mathbits.com/MathBits/CompSci/LibraryFunc/Time.htm
             randIndex = rand()% size; //menghasilkan angka acak dari 0 sampai size-1
             return words[randIndex];
         }
 
-        //prosedur untuk menggambar hangman
+
+
+        //prosedur untuk menggambar hangman berdasarkan tries
         void displayHangman(int tries)
         {
             switch(tries)
@@ -116,6 +148,7 @@ class Hangman
         }
 
          
+
         //fungsi untuk mengubah kata menjadi _ _ _ _ _
         string fhiddenWord(string word)
         {
@@ -138,14 +171,16 @@ class Hangman
         {
             //KAMUS LOKAL
             int length = word.length();
-
+            int i;
             //ALGORITMA
-            for(int i = 0; i < length; i++)
+            i=0;
+            while( i < length)
             {
                 if(letter == word[i])
                 {
                     return true;
                 }
+                i=i+1;
             }
             return false;
         }
@@ -177,45 +212,49 @@ class Hangman
             while (!isGameOver)
             {
                 displayHangman(tries); // Menampilkan gambar Hangman
-                cout << "Tebak kata: " << hiddenWord << endl;
-                cout << "Tersisa " << tries << " kesempatan" << endl;
+                cout << "Tema : "<< this->theme << endl;
+                cout << "Tebak kata : " << this->hiddenWord << endl;
+                cout << "Tersisa " << this->tries << " kesempatan" << endl;
                 cout << "Masukkan huruf tebakan: ";
                 cin >> guess;
                 system("cls"); // Membersihkan layar
 
-                if (isCorrect(guess, word))  // Mengecek apakah huruf tebakan benar
+                if (isCorrect(guess, this->word))  // Mengecek apakah huruf tebakan benar
                 {
 
                     // Memperbarui kata tersembunyi dengan huruf yang benar
-                    for (int i = 0; i < word.length(); i++)
+                    for (int i = 0; i < this->word.length(); i++)
                     {
-                        if (word[i] == guess)
+                        if (this->word[i] == guess)
                         {
-                            hiddenWord[i * 2] = guess;
+                            this->hiddenWord[i * 2] = guess;
                         }
                     }
 
                     // Mengecek apakah pemain telah menebak seluruh kata
-                    if (allLettersGuessed(hiddenWord))
+                    if (allLettersGuessed(this->hiddenWord))
                     {
+                        displayHangman(tries); // Menampilkan gambar Hangman
                         cout << "Selamat, kamu menang!" << endl;
-                        isGameOver = true;
+                        cout << "Kata yang berhasil anda tebak adalah adalah: " << this->word << endl;
+                        cout << "Jumlah Tebakan Salah:" <<6- (this->tries) << endl;
+                        this->isGameOver = true;
                     }
                     
                 } 
                 else 
                 {
-                    tries--; // Mengurangi jumlah kesempatan jika huruf tebakan salah
+                    this->tries--; // Mengurangi jumlah kesempatan jika huruf tebakan salah
 
                     // Mengecek apakah pemain kehabisan kesempatan
-                    if (tries == 0) 
+                    if (this->tries == 0) 
                     {
-                        displayHangman(tries); // Menampilkan gambar Hangman
-                        cout << "Yahhhhh.... digantung....." << endl;
-                        cout << "Kata yang benar adalah: " << word << endl;
-                        isGameOver = true;
+                        displayHangman(this->tries); // Menampilkan gambar Hangman
+                        cout << "Kata yang benar adalah: " << this->word << endl;
+                        this->isGameOver = true;
                     }
                 }
             }
         }
 };
+

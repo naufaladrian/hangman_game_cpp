@@ -1,7 +1,8 @@
 /*
-    Fungsi utama game hangman sederhana v2
+    Fungsi utama game hangman sederhana 
     dibuat oleh: M NAUFAL ADRIAN PRATAMA PUTRA
-    uploaded on: 12/06/2021
+    uploaded on: 12/06/2023
+    perubahan terakhir: 15/06/2023
 
 */
 #include <iostream>

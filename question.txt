@@ -1,0 +1,11 @@
+selection
+bubble
+radix
+insertion
+merge
+quick
+heap
+counting
+bucket
+shell
+Algoritma Sorting
