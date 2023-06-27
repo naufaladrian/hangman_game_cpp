@@ -3,7 +3,6 @@
     dibuat oleh: M NAUFAL ADRIAN PRATAMA PUTRA
     uploaded on: 12/06/2023
     perubahan terakhir: 15/06/2023
-
 */
 #include <iostream>
 #include <string> 
